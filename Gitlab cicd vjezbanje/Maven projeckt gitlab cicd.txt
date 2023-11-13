@@ -1,0 +1,52 @@
+variables:
+  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository #local repo
+
+image: maven:latest
+
+stages:
+    - build
+    - test
+    - package
+    - deploy
+
+cache:  # cache in this repo
+  paths:
+    - .m2/repository
+    - target
+
+build:
+    stage: build
+    tags:
+        - docker
+
+    script:
+        - echo "maven compile started"
+        - "mvn compile"  #build mvn compile (mvn = command, compile=lifecycle stage)
+
+    
+test:
+    stage: test
+    tags:
+        - docker
+
+    script:
+        -echo "Maven test started"
+        - mvn test
+
+
+package:
+    stage: package
+    tags:
+        - docker
+
+    script:
+        - echo "Maven packaging started"
+        - "mvn package"
+
+Deploy:
+    stage: deploy
+    tags:
+        - docker
+
+    script:
+        - echo "maven deploy started"

@@ -1,0 +1,40 @@
+stages: # Stages
+  - Login
+  - Build
+  - Push
+  - Logout
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test #Container image
+
+
+login_job:
+  stage: Login
+  tags:
+    - docker
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY # Login docker i container regristry gitlab
+
+
+
+build_job:
+  stage: Build
+  tags:
+    - docker
+  script:
+    - docker build -t $CONTAINER_TEST_IMAGE . # Build image 
+
+push_job:
+  stage: Push
+  tags:
+   - docker
+  script:
+    - docker push $CONTAINER_TEST_IMAGE #Push image to container registry gitlab
+    - echo "Pushing the image"
+
+logout_job:
+  stage: Logout
+  tags:
+    - docker
+  script:
+   -docker logout $CI_REGISTRY

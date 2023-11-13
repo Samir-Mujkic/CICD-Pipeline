@@ -1,0 +1,17 @@
+image: docker:19.03.12 #Using docker image
+services:
+  - docker:19.03.12-dind #Define service
+
+stages:  #Build stage
+  - Build
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:latest  #Container image name
+
+build_job:
+  stage: Build
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY # Docker login username password and registry
+    - docker build -t $CONTAINER_TEST_IMAGE . #Run docker file on home location
+    - docker push $CONTAINER_TEST_IMAGE # Then push image to container registry
+    - docker logout
